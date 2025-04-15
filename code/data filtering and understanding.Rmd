@@ -1,0 +1,165 @@
+---
+title: "mesozooplankton_marinemammal_filtering"
+author: "Madhumita Kabade"
+date: "2025-04-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#reading the file
+
+library(tidyverse)
+#install.packages("openxlsx")
+#install.packages("sf")
+#install.packages("rnaturalearth")
+#install.packages("rnaturalearthdata")
+#install.packages("patchwork")  # Run once
+library(openxlsx)  # for writing Excel files
+library(patchwork)
+
+data <- read_csv("D:\\research methods and communication\\literature review for cruise work\\IMOS_-_Zooplankton_Abundance_and_Biomass_Index_(CPR)-raw_data 2007-2024.csv")
+
+
+```
+
+
+```{r}
+
+#creating a map with all the data points to check
+# Load libraries
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+# Convert to spatial object
+#data_sf <- st_as_sf(data, coords = c("Longitude", "Latitude"), crs = 4326)
+
+# Get world map
+#world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Plot
+#ggplot() +
+  #geom_sf(data = world, fill = "lightgray", color = "white") +
+  #geom_sf(data = data_sf, color = "blue", size = 1.5) +
+  #coord_sf(xlim = c(130, 155), ylim = c(-45, -30), expand = FALSE) +
+  #labs(title = "Zooplankton Sampling Sites",
+       #subtitle = "Bass Strait & Great Australian Bight") +
+  #theme_minimal()
+#row_number function can be used to rank the rows in order of highest value in the specific column
+#Or one of the hottest colour packages out there now, even used in my own published work, the viridis colour scheme. Once you’ve tried this one you’ll start to see it everywhere!
+#You can even try some other sparky colour schemes, such as the Wes Anderson colour palette. Essential for those who love The Life Aquatic and other Wes Anderson films.
+#Each variable must have its own column.
+#Each observation must have its own row.
+#Each value must have its own cell.
+
+```
+
+#trying ggplot to see the coordinates
+
+```{r}
+library(ggplot2)
+
+# Plot the data points
+ggplot(data, aes(x = Longitude, y = Latitude)) +
+  geom_point(alpha = 0.3) +
+  geom_rect(aes(xmin = 144, xmax = 149.5, ymin = -40.5, ymax = -38),
+            fill = NA, color = "red", linetype = "dashed") +
+  coord_fixed() +
+  labs(title = "Check if Rectangle Covers Bass Strait",
+       x = "Longitude", y = "Latitude")
+
+
+```
+#layering it with real world map
+
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Convert your data to spatial object
+data_sf <- st_as_sf(data, coords = c("Longitude", "Latitude"), crs = 4326)
+
+# Plot with world basemap
+ggplot() +
+  geom_sf(data = world, fill = "lightgrey", color = "white") +
+  geom_sf(data = data_sf, color = "blue", size = 1, alpha = 0.6) +
+  coord_sf(xlim = c(130, 155), ylim = c(-45, -30), expand = FALSE) +
+  labs(title = "Zooplankton Sampling Sites",
+       subtitle = "Bass Strait & Great Australian Bight") 
+
+```
+
+
+#merging the graphs together
+
+```{r}
+
+# Convert your data
+data_sf <- st_as_sf(data, coords = c("Longitude", "Latitude"), crs = 4326)
+
+# World map
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# First Plot: Plain lat-long scatter + box
+p1 <- ggplot(data, aes(x = Longitude, y = Latitude)) +
+  geom_point(alpha = 0.3, color = "black") +
+  geom_rect(aes(xmin = 142.5, xmax = 150.5, ymin = -42, ymax = -37.2),
+            fill = NA, color = "red", linetype = "dashed", linewidth = 1) +
+  coord_fixed() +
+  labs(title = "Check if Rectangle Covers Bass Strait",
+       x = "Longitude", y = "Latitude")
+
+# Second Plot: Full map with Australia + rectangle
+p2 <- ggplot() +
+  geom_sf(data = world, fill = "lightgrey", color = "white") +
+  geom_sf(data = data_sf, color = "blue", size = 1, alpha = 0.6) +
+  geom_rect(aes(xmin = 142.5, xmax = 150.5, ymin = -42, ymax = -37.2),
+            inherit.aes = FALSE,
+            fill = NA, color = "red", linetype = "dashed", linewidth = 1) +
+  coord_sf(xlim = c(130, 155), ylim = c(-45, -30), expand = FALSE) +
+  labs(title = "Zooplankton Sampling Sites",
+       subtitle = "Bass Strait & Great Australian Bight")
+
+# Combine side by side
+p1 + p2
+
+```
+
+#exporting GAB and BS data
+
+```{r}
+library(dplyr)
+
+# Filter rows for Great Australian Bight
+gulf_data <- data %>%
+  filter(Region == "Great Australian Bight")
+
+# Filter rows for Bass Strait using coordinates
+bass_data <- data %>%
+  filter(Latitude >= -42, Latitude <= -37.2,
+         Longitude >= 142.5, Longitude <= 150.5)
+
+# Combine the two datasets into one
+combined_data <- bind_rows(gulf_data, bass_data)
+
+# Optional: View how many rows came from each region
+table(combined_data$Region)
+
+library(openxlsx)
+
+write.xlsx(combined_data, "combined_bass_gab_data.xlsx")
+
+```
+
+#Renaming surthern east australian current regions to Bass Strait
+
+```{r}
+combined_data <- combined_data %>%
+  mutate(Region = if_else(Region == "Southern East Australian Current", 
+                          "Bass Strait", 
+                          Region))
+  
+```
+
+
+
