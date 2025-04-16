@@ -158,6 +158,7 @@ combined_data <- combined_data %>%
   mutate(Region = if_else(Region == "Southern East Australian Current", 
                           "Bass Strait", 
                           Region))
+write.xlsx(combined_data, "combined_bass_gab_data.xlsx")
   
 ```
 
