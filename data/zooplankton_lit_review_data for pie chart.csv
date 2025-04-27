@@ -1,0 +1,19 @@
+Metric,Value,Unit,Notes,Season,Sampling Depth,Mesh Size,Spatial Context,Exact Location (GAB/Bass Strait)
+Biomass,30,mg C m⁻³,National dataset subset for GAB,All seasons,0–200 m,200 µm,Shelf-wide survey,Eyre Peninsula shelf (central GAB)
+Abundance,1800,ind. m⁻³,Eastern GAB; seasonal average,Summer,0–100 m,200 µm,Eastern boundary region,"Eastern GAB, near Ceduna"
+Abundance,2200,ind. m⁻³,"Surface samples, summer season",Summer,0–50 m,200 µm,Coastal neritic zone,"Southcentral GAB, shelf area"
+Biomass,28,mg C m⁻³,Vertical nitrate flux study,Summer,0–150 m,Unknown,Vertical gradient transect,"Eastern GAB, Streaky Bay region"
+Biomass,25,mg C m⁻³,Eastern GAB region; integrated over 100m,Summer,0–100 m,200 µm,Upwelling-affected region,"Eastern GAB, near Head of Bight"
+Abundance,2000,ind. m⁻³,Inshore-offshore transects near Eyre Peninsula,Autumn,0–100 m,300 µm,Cross-shelf gradient,Offshore Eyre Peninsula transects
+Abundance,3000,ind. m⁻³,Comparison with eddies and boundary regions,Summer,0–200 m,200 µm,Eddy and frontal zone,"Eastern Bass Strait, near eddies/frontal zones"
+Abundance,2800,ind. m⁻³,Seasonal copepod survey in Bass Strait,Year-round,0–200 m,200 µm,Mid-shelf stations,Central Bass Strait
+Biomass,50,mg C m⁻³,Acoustic biomass estimation,Winter,0–300 m,Acoustic,Acoustic transects,Across Bass Strait shelf break
+Biomass,42,mg C m⁻³,"Plankton net haul, late summer",Late Summer,0–200 m,300 µm,Inshore & offshore mix,"Northern Bass Strait, coastal edge"
+Biomass,45,mg C m⁻³,From national spatial dataset,All seasons,0–200 m,200 µm,National shelf transect,National transect through Bass Strait
+Abundance,2900,ind. m⁻³,Acoustic observations of mesozooplankton distribution in Bass Strait,Autumn,0–300 m,Acoustic,Transect mapping,Mid-Bass Strait transect
+Abundance,3500,ind. m⁻³,Global temperate estimate,All seasons,0–200 m,200 µm,Temperate shelves,Global temperate shelves
+Biomass,5.9,µg C L⁻¹,Gridded data product,All seasons,Surface to 1000 m,Various,Global grids,Global gridded dataset
+Abundance,4000,ind. m⁻³,Fram Strait transect,Spring,0–200 m,200 µm,Arctic to sub-Arctic transition,Fram Strait (Arctic)
+Biomass,50,mg C m⁻³,Global community structure and vertical flux dataset,All seasons,Integrated depth,180 µm,Global ocean basins,"Global transects (Atlantic, Pacific, Indian)"
+Biomass,62,mg C m⁻³,Global mesozooplankton biomass modeled using machine learning,All seasons,0–300 m,Modeled,Global ML model,Modeled global ocean
+Abundance,3600,ind. m⁻³,Gridded global dataset from MAREDAT World Ocean Atlas (PANGAEA),All seasons,Surface to 200 m,Varied,Global atlas data,Global atlas data
