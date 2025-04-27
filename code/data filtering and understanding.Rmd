@@ -19,7 +19,7 @@ install.packages("writexl")
 library(openxlsx)  # for writing Excel files
 library(patchwork)
 
-data <- read_csv("D:\\research methods and communication\\literature review for cruise work\\IMOS_-_Zooplankton_Abundance_and_Biomass_Index_(CPR)-raw_data 2007-2024.csv")
+
 
 
 ```
@@ -1008,6 +1008,1152 @@ df <- df %>%
 
 # Write to new Excel file
 write_xlsx(df, "subfinal_product_3.xlsx")
+
+```
+
+
+#removing individual species columns that are already added.
+
+```{r}
+library(readxl)   # to read Excel files
+library(writexl)
+
+
+df <- read_excel("subfinal_product_3.xlsx", sheet = "Sheet1")
+
+
+species_to_remove <- c("Acartia amboinensis f", "Acartia amboinensis m", "Acartia australis f", "Acartia australis m", 
+"Acartia bispinosa f", "Acartia bispinosa m", "Acartia clausi f", "Acartia danae", 
+"Acartia danae f", "Acartia danae j", "Acartia danae m", "Acartia fossae f", 
+"Acartia fossae m", "Acartia negligens f", "Acartia negligens m", "Acartia pacifica", 
+"Acartia pacifica f", "Acartia pacifica j", "Acartia pacifica m", "Acartia pacifica mertoni f", 
+"Acartia pietschmani f", "Acartia simplex f", "Acartia simplex m", "Acartia sinjiensis f", 
+"Acartia sinjiensis m", "Acartia spp.", "Acartia spp. f", "Acartia spp. j", 
+"Acartia spp. m", "Acartia tonsa f", "Acartia tonsa m", "Acartia tranteri", 
+"Acartia tranteri f", "Acartia tranteri m", "Calanus australis", "Calanus australis CIV", 
+"Calanus australis CV", "Calanus australis copepodite", "Calanus australis f", 
+"Calanus australis m", "Calanus propinquus", "Calanus simillimus", "Calocalanus pavo f",
+"Calocalanus plumulosus f",
+"Calocalanus plumulosus j",
+"Calocalanus plumulosus m",
+"Calocalanus spp.",
+"Calocalanus spp. f",
+"Calocalanus spp. j",
+"Calocalanus spp. m",
+"Calocalanus styliremis f",
+"Calocalanus tenuis f",
+"Candacia bipinnata",
+"Candacia bipinnata f",
+"Candacia bipinnata j",
+"Candacia bipinnata m",
+"Candacia bradyi f",
+"Candacia bradyi j",
+"Candacia bradyi m",
+"Candacia catula f",
+"Candacia catula m",
+"Candacia cheirura",
+"Candacia cheirura f",
+"Candacia cheirura m",
+"Candacia curta f",
+"Candacia discaudata f",
+"Candacia discaudata m",
+"Candacia ethiopica",
+"Candacia ethiopica f",
+"Candacia ethiopica j",
+"Candacia ethiopica m",
+"Candacia falcifera",
+"Candacia maxima",
+"Candacia pachydactyla f",
+"Candacia pachydactyla m",
+"Candacia simplex f",
+"Candacia spp.",
+"Candacia spp. f",
+"Candacia spp. j",
+"Candacia spp. m",
+"Candacia truncata f",
+"Candacia truncata m",
+"Centropages australiensis",
+"Centropages australiensis f",
+"Centropages australiensis j",
+"Centropages australiensis m",
+"Centropages bradyi",
+"Centropages bradyi f",
+"Centropages bradyi j",
+"Centropages bradyi m",
+"Centropages calaninus f",
+"Centropages calaninus j",
+"Centropages calaninus m",
+"Centropages elegans f",
+"Centropages elegans m",
+"Centropages elongatus f",
+"Centropages elongatus m",
+"Centropages furcatus",
+"Centropages furcatus f",
+"Centropages furcatus j",
+"Centropages furcatus m",
+"Centropages gracilis f",
+"Centropages gracilis m",
+"Centropages kroyeri m",
+"Centropages orsinii",
+"Centropages orsinii f",
+"Centropages orsinii j",
+"Centropages orsinii m",
+"Centropages spp.",
+"Centropages spp. f",
+"Centropages spp. j",
+"Centropages spp. m",
+"Centropages violaceus f",
+"Clausidiid j",
+"Clausocalanus arcuicornis f",
+"Clausocalanus brevipes",
+"Clausocalanus brevipes f",
+"Clausocalanus farrani f (<1.00mm)",
+"Clausocalanus farrani/jobei f (1.00mm>x<1.2mm)", 
+"Clausocalanus furcatus f",
+"Clausocalanus furcatus m",
+"Clausocalanus ingens",
+"Clausocalanus ingens f",
+"Clausocalanus ingens m",
+"Clausocalanus jobei f (>1.2mm)",
+"Clausocalanus laticeps",
+"Clausocalanus laticeps f",
+"Clausocalanus lividus f",
+"Clausocalanus mastigophorus f",
+"Clausocalanus minor f",
+"Clausocalanus parapergens f",
+"Clausocalanus paululus f",
+"Clausocalanus pergens f",
+"Clausocalanus spp.",
+"Clausocalanus spp. f",
+"Clausocalanus spp. i",
+"Clausocalanus spp. j",
+"Clausocalanus spp. m",
+"Copepod j",
+"Corycaeus clausi f",
+"Corycaeus clausi m",
+"Corycaeus crassiusculus f",
+"Corycaeus crassiusculus m",
+"Corycaeus speciosus f",
+"Corycaeus speciosus m",
+"Corycaeus spp.",
+"Corycaeus spp. f",
+"Corycaeus spp. j",
+"Corycaeus spp. m",
+"Corycaeus vitreus m",
+"Delibus nudus f",
+"Delibus nudus m",
+"Delibus spp. f",
+"Dioithona oculata f",
+"Dioithona rigida f",
+"Dioithona rigida m",
+"Eucalanus elongatus f",
+"Eucalanus elongatus m",
+"Eucalanus hyalinus f",
+"Eucalanus spp.",
+"Eucalanus spp. f",
+"Eucalanus spp. m",
+"Euchaeta acuta f",
+"Euchaeta acuta m",
+"Euchaeta concinna f",
+"Euchaeta concinna m",
+"Euchaeta indica f",
+"Euchaeta indica m",
+"Euchaeta longicornis f",
+"Euchaeta marina gp f",
+"Euchaeta marina m",
+"Euchaeta marinella f",
+"Euchaeta marinella m",
+"Euchaeta media f",
+"Euchaeta rimana f",
+"Euchaeta rimana m",
+"Euchaeta spp.",
+"Euchaeta spp. f",
+"Euchaeta spp. j",
+"Euchaeta spp. m",
+"Labidocera acuta f",
+"Labidocera acuta j",
+"Labidocera acuta m",
+"Labidocera acutifrons f",
+"Labidocera acutifrons m",
+"Labidocera cervi f",
+"Labidocera cervi m",
+"Labidocera dakini f",
+"Labidocera dakini m",
+"Labidocera detruncata f",
+"Labidocera detruncata m",
+"Labidocera farrani f",
+"Labidocera farrani m",
+"Labidocera kroyeri f",
+"Labidocera kroyeri m",
+"Labidocera laevidentata f",
+"Labidocera laevidentata m",
+"Labidocera minuta f",
+"Labidocera minuta j",
+"Labidocera minuta m",
+"Labidocera moretoni m",
+"Labidocera pavo f",
+"Labidocera pavo m",
+"Labidocera spp.",
+"Labidocera spp. f",
+"Labidocera spp. j",
+"Labidocera spp. m",
+"Labidocera tasmanica f",
+"Labidocera tasmanica m",
+"Miracia efferata f",
+"Oithona Grp1 (flat head) f",
+"Oithona Grp3 (pointy head) f",
+"Oithona Grp5 (orange furcae) f",
+"Oithona atlantica f",
+"Oithona attenuata f",
+"Oithona attenuata typical f",
+"Oithona brevicornis f",
+"Oithona decipiens f",
+"Oithona decipiens/similis f",
+"Oithona longispina f",
+"Oithona nana f",
+"Oithona plumifera",
+"Oithona plumifera f",
+"Oithona plumifera j",
+"Oithona setigera f",
+"Oithona similis",
+"Oithona similis f",
+"Oithona simplex f",
+"Oithona simplex m",
+"Oithona spp.",
+"Oithona spp. f",
+"Oithona spp. j",
+"Oithona spp. large m",
+"Oithona spp. m",
+"Oithona spp. small m",
+"Oithona tenuis f",
+"Oncaea atlantica complex f",
+"Oncaea clevei complex f",
+"Oncaea clevei complex m",
+"Oncaea clevei f",
+"Oncaea media complex f",
+"Oncaea media complex m",
+"Oncaea media f",
+"Oncaea media m",
+"Oncaea mediterranea broad f",
+"Oncaea mediterranea complex f",
+"Oncaea mediterranea complex m",
+"Oncaea mediterranea slender f",
+"Oncaea paraclevei f",
+"Oncaea scottodicarloi f",
+"Oncaea spp.",
+"Oncaea spp. f",
+"Oncaea spp. j",
+"Oncaea spp. m",
+"Oncaea spp. m 0.4<>0.7mm",
+"Oncaea spp. m <0.4mm",
+"Oncaea spp. m >0.7mm",
+"Oncaea venusta complex",
+"Oncaea venusta complex f",
+"Oncaea venusta complex j",
+"Oncaea venusta complex m",
+"Oncaea venusta medium f",
+"Oncaea venusta medium hump f",
+"Oncaea venusta medium no hump f",
+"Oncaea venusta typica",
+"Oncaea venusta typica f",
+"Oncaea venusta typica j",
+"Oncaea venusta typica m",
+"Oncaea venusta venella f",
+"Oncaea venusta venella hump f",
+"Oncaea venusta venella no hump f",
+"Oncaea waldemari f",
+"Oncaea zernovi complex f",
+"Paracalanus aculeatus f",
+"Paracalanus aculeatus m",
+"Paracalanus denudatus f",
+"Paracalanus indicus f",
+"Paracalanus indicus i",
+"Paracalanus indicus m",
+"Paracalanus parvus f",
+"Paracalanus spp.",
+"Paracalanus spp. f",
+"Paracalanus spp. i",
+"Paracalanus spp. j",
+"Paracalanus spp. m",
+"Pontella novaezealandiae f",
+"Pontella novaezealandiae m",
+"Pontella securifer f",
+"Pontella spp.",
+"Pontella spp. f",
+"Pontella spp. j",
+"Pseudodiaptomus baylyi f",
+"Pseudodiaptomus mertoni f",
+"Temora discaudata",
+"Temora discaudata f",
+"Temora discaudata j",
+"Temora discaudata m",
+"Temora spp.",
+"Temora spp. f",
+"Temora spp. j",
+"Temora stylifera m",
+"Temora turbinata",
+"Temora turbinata f",
+"Temora turbinata j",
+"Temora turbinata m",
+"Tortanus barbatus f",
+"Tortanus barbatus j",
+"Tortanus barbatus m",
+"Tortanus gracilis f",
+"Tortanus gracilis m",
+"Tortanus spp.",
+"Tortanus spp. f",
+"Tortanus spp. j",
+"Tortanus spp. m",
+"Triconia conifera complex f",
+"Triconia conifera complex m",
+"Triconia spp. F",
+"Triconia spp. j",
+"Triconia spp. m",
+"Urocorycaeus furcifer f",
+"Urocorycaeus furcifer m",
+"Urocorycaeus lautus f",
+"Urocorycaeus lautus m",
+"Urocorycaeus longistylis f",
+"Urocorycaeus longistylis m",
+"Urocorycaeus spp.",
+"Acrocalanus gibber f",
+"Acrocalanus gibber m",
+"Acrocalanus gracilis f",
+"Acrocalanus gracilis m",
+"Acrocalanus longicornis f",
+"Acrocalanus monachus f",
+"Acrocalanus spp.",
+"Acrocalanus spp. f",
+"Acrocalanus spp. i",
+"Acrocalanus spp. j",
+"Acrocalanus spp. m",
+"Aetideus acutus f",
+"Aetideus armatus f",
+"Aetideus pseudarmatus f",
+"Aetideus spp. F",
+"Agetus flaccus f",
+"Agetus flaccus m",
+"Agetus limbatus f",
+"Agetus limbatus m",
+"Agetus spp. f",
+"Agetus spp. j",
+"Agetus spp. m",
+"Agetus typicus f",
+"Agetus typicus m",
+"Bestiolina similis f",
+"Bestiolina similis m",
+"Bestiolina spp. f",
+"Bestiolina spp. m",
+"Calanid CIV",
+"Calanid CV",
+"Calanidae",
+"Calanidae f",
+"Calanidae j",
+"Calanidae m",
+"Calanoid copepods (small)",
+"Calanoid j",
+"Calanoides acutus",
+"Calanoides acutus f",
+"Calanoides breivcornis f",
+"Calanoides brevicornis",
+"Calanoides carinatus f",
+"Calanoides carinatus m",
+"Calanoides macrocarinatus f",
+"Calanoides patagoniensis f",
+"Calanoides patagoniensis m",
+"Calanoides spp.",
+"Calanoides spp. CIV",
+"Calanoides spp. CV",
+"Calanoides spp. f",
+"Calanoides spp. j",
+"Calanopia aurivilli f",
+"Calanopia aurivilli m",
+"Calanopia elliptica f",
+"Calanopia elliptica m",
+"Calanopia minor f",
+"Calanopia minor m",
+"Calanopia spp.",
+"Calanopia spp. f",
+"Calanopia spp. j",
+"Calanopia spp. m",
+"Canthocalanus pauper",
+"Canthocalanus pauper CV",
+"Canthocalanus pauper f",
+"Canthocalanus pauper m",
+"Corycaeidae",
+"Corycaeidae f",
+"Corycaeidae j",
+"Corycaeidae m",
+"Cosmocalanus darwinii",
+"Cosmocalanus darwinii CV",
+"Cosmocalanus darwinii f",
+"Cosmocalanus darwinii m",
+"Ctenocalanus citer",
+"Ctenocalanus citer f",
+"Ctenocalanus spp.",
+"Ctenocalanus spp. f",
+"Ctenocalanus spp. j",
+"Ctenocalanus spp. m",
+"Ctenocalanus vanus",
+"Ctenocalanus vanus f",
+"Ctenocalanus vanus m",
+"Ditrichocorycaeus andrewsi f",
+"Ditrichocorycaeus andrewsi m",
+"Ditrichocorycaeus anglicus f",
+"Ditrichocorycaeus anglicus m",
+"Ditrichocorycaeus asiaticus f",
+"Ditrichocorycaeus asiaticus m",
+"Ditrichocorycaeus aucklandicus f",
+"Ditrichocorycaeus aucklandicus m",
+"Ditrichocorycaeus dahli f",
+"Ditrichocorycaeus dahli m",
+"Ditrichocorycaeus erythraeus f",
+"Ditrichocorycaeus erythraeus m",
+"Ditrichocorycaeus lubbocki f",
+"Ditrichocorycaeus lubbocki m",
+"Ditrichocorycaeus minimus m",
+"Ditrichocorycaeus spp.",
+"Ditrichocorycaeus spp. f",
+"Ditrichocorycaeus spp. j",
+"Ditrichocorycaeus spp. m",
+"Ditrichocorycaeus subtilis f",
+"Ditrichocorycaeus subtilis m",
+"Ditrichocorycaeus tenuis f",
+"Eucalanidae",
+"Eucalanidae f",
+"Eucalanidae j",
+"Eucalanidae m",
+"Euchaeta acuta f",
+"Euchaeta acuta m",
+"Euchaeta concinna f",
+"Euchaeta concinna m",
+"Euchaeta indica f",
+"Euchaeta indica m",
+"Euchaeta longicornis f",
+"Euchaeta marina gp f",
+"Euchaeta marina m",
+"Euchaeta marinella f",
+"Euchaeta marinella m",
+"Euchaeta media f",
+"Euchaeta rimana f",
+"Euchaeta rimana m",
+"Euchaeta spp.",
+"Euchaeta spp. f",
+"Euchaeta spp. j",
+"Euchaeta spp. m",
+"Euchirella rostrata",
+"Euchirella rostrata f",
+"Euchirella rostrata j",
+"Euchirella rostrata m",
+"Euchirella rostromagna f",
+"Euchirella rostromagna j",
+"Euchirella rostromagna m",
+"Euchirella spp.",
+"Euchirella spp. f",
+"Euchirella spp. j",
+"Euchirella spp.m",
+"Euterpina acutifrons",
+"Euterpina acutifrons f",
+"Euterpina acutifrons j",
+"Euterpina acutifrons m",
+"Euterpina spp.",
+"Farranula carinata f",
+"Farranula concinna f",
+"Farranula curta f",
+"Farranula gibbula f",
+"Farranula gracilis f",
+"Farranula rostrata f",
+"Farranula rostrata m",
+"Farranula spp.",
+"Farranula spp. f",
+"Farranula spp. j",
+"Farranula spp. m",
+"Haloptilus longicornis f",
+"Haloptilus oxycephalus",
+"Haloptilus oxycephalus f",
+"Heterorhabdus austrinus",
+"Heterorhabdus lobatus f",
+"Heterorhabdus lobatus m",
+"Heterorhabdus papilliger",
+"Heterorhabdus papilliger f",
+"Heterorhabdus papilliger m",
+"Heterorhabdus spinifer f",
+"Heterorhabdus spinifrons m",
+"Heterorhabdus spp.",
+"Heterorhabdus spp. f",
+"Heterorhabdus spp. j",
+"Heterorhabdus spp. m",
+"Lucicutia clausi m",
+"Lucicutia flavicornis",
+"Lucicutia flavicornis f",
+"Lucicutia flavicornis m",
+"Lucicutia ovalis f",
+"Lucicutia spp.",
+"Lucicutia spp. f",
+"Lucicutia spp. j",
+"Lucicutia spp. m",
+"Mecynocera clausi",
+"Mecynocera clausi f",
+"Mecynocera clausi m",
+"Mecynocera spp.",
+"Mecynocera spp. j",
+"Mesocalanus j",
+"Mesocalanus spp.",
+"Mesocalanus spp. CV",
+"Mesocalanus tenuicornis f",
+"Mesocalanus tenuicornis m",
+"Metridia gerlachei",
+"Metridia gerlachei f",
+"Metridia lucens",
+"Metridia lucens f",
+"Metridia lucens m",
+"Metridia spp.",
+"Metridia spp. j",
+"Metridia spp. m",
+"Nannocalanus minor",
+"Nannocalanus minor CV",
+"Nannocalanus minor f",
+"Nannocalanus minor m",
+"Nauplii Rhincalanus gigas",
+"Nauplii calanoid (Rhincalanus?)",
+"Neocalanus gracilis",
+"Neocalanus gracilis CV",
+"Neocalanus gracilis f",
+"Neocalanus gracilis m",
+"Neocalanus robustior f",
+"Neocalanus spp.",
+"Neocalanus spp. CIV",
+"Neocalanus spp. CV",
+"Neocalanus spp. copepodite",
+"Neocalanus spp. f",
+"Neocalanus spp. j",
+"Neocalanus tonsus",
+"Neocalanus tonsus CIV",
+"Neocalanus tonsus CV",
+"Neocalanus tonsus f",
+"Neocalanus tonsus m",
+"Oculosetella gracilis",
+"Oculosetella gracilis f",
+"Oculosetella gracilis m",
+"Oncaeidae j",
+"Oncaeidae m",
+"Onychocorycaeus agilis f",
+"Onychocorycaeus agilis m",
+"Onychocorycaeus catus f",
+"Onychocorycaeus catus m",
+"Onychocorycaeus giesbrechti f",
+"Onychocorycaeus giesbrechti m",
+"Onychocorycaeus latus f",
+"Onychocorycaeus latus m",
+"Onychocorycaeus ovalis f",
+"Onychocorycaeus pacificus f",
+"Onychocorycaeus pacificus m",
+"Onychocorycaeus pumilus f",
+"Onychocorycaeus pumilus m",
+"Onychocorycaeus spp.",
+"Onychocorycaeus spp. f",
+"Onychocorycaeus spp. m",
+"Paraeuchaeta antarctica",
+"Paraeuchaeta biloba f",
+"Paraeuchaeta biloba m",
+"Paraeuchaeta exigua",
+"Paraeuchaeta exigua f",
+"Paraeuchaeta spp.",
+"Paraeuchaeta spp. f",
+"Paraeuchaeta spp. j",
+"Paraeuchaeta spp. m",
+"Paraeuchaeta tumidula f",
+"Pareucalanus attenuatus",
+"Pareucalanus langae f",
+"Pareucalanus langae m",
+"Pareucalanus sewelli f",
+"Pareucalanus sewelli m",
+"Pareucalanus spp.",
+"Pareucalanus spp. f",
+"Pareucalanus spp. m",
+"Parvocalanus cf. serratipes f",
+"Parvocalanus crassirostris f",
+"Parvocalanus crassirostris m",
+"Parvocalanus spp. f",
+"Phaenna spinifera f",
+"Pleuromamma abdominalis",
+"Pleuromamma abdominalis f",
+"Pleuromamma abdominalis j",
+"Pleuromamma abdominalis m",
+"Pleuromamma borealis",
+"Pleuromamma borealis f",
+"Pleuromamma borealis m",
+"Pleuromamma gracilis",
+"Pleuromamma gracilis f",
+"Pleuromamma gracilis m",
+"Pleuromamma indica f",
+"Pleuromamma indica m",
+"Pleuromamma piseki",
+"Pleuromamma piseki f",
+"Pleuromamma piseki m",
+"Pleuromamma quadrungulata f",
+"Pleuromamma robusta",
+"Pleuromamma robusta f",
+"Pleuromamma spp.",
+"Pleuromamma spp. f",
+"Pleuromamma spp. j",
+"Pleuromamma spp. m",
+"Pleuromamma xiphias f",
+"Pontellidae",
+"Pontellidae f",
+"Pontellidae j",
+"Pontellidae m",
+"Pontellina morii f",
+"Pontellina morii m",
+"Pontellina plumata f",
+"Pontellina plumata m",
+"Pontellina spp.",
+"Pontellina spp. f",
+"Pontellina spp. j",
+"Pontellopsis krameri f",
+"Pontellopsis krameri m",
+"Pontellopsis spp. f",
+"Primno macropa",
+"Primno spp.",
+"Rhincalanidae j",
+"Rhincalanus cornutus",
+"Rhincalanus cornutus f",
+"Rhincalanus cornutus m",
+"Rhincalanus gigas",
+"Rhincalanus nasutus f",
+"Rhincalanus nasutus j",
+"Rhincalanus nasutus m",
+"Rhincalanus rostrifrons f",
+"Rhincalanus rostrifrons j",
+"Rhincalanus rostrifrons m",
+"Rhincalanus spp.",
+"Rhincalanus spp. f",
+"Rhincalanus spp. m",
+"Scaphocalanus brevicornis f",
+"Scaphocalanus echinatus f",
+"Scolecithricella globulosa m",
+"Scolecithricella minor f",
+"Scolecithricella spp. j",
+"Scolecithrix bradyi f",
+"Scolecithrix danae f",
+"Scolecithrix danae m",
+"Scolecithrix spp.",
+"Scolecithrix spp. f",
+"Scolecithrix spp. j",
+"Scolecitrichidae f",
+"Scolecitrichidae j",
+"Scolecitrichidae m",
+"Temoropia mayumbaensis m",
+"Undinula vulgaris",
+"Undinula vulgaris CIV",
+"Undinula vulgaris CV",
+"Undinula vulgaris copepedite",
+"Undinula vulgaris f",
+"Undinula vulgaris m", "Euphausia frigida", "Euphausia frigida calyptopis", "Euphausia frigida furcilia",
+  "Euphausia hanseni", "Euphausia longirostris", "Euphausia longirostris calyptopis", "Euphausia longirostris furcilia",
+  "Euphausia lucens", "Euphausia recurva", "Euphausia similis", "Euphausia similis f",
+  "Euphausia similis var. armata", "Euphausia spinifera", "Euphausia spinifera calyptopis", "Euphausia spinifera furcilia",
+  "Euphausia spp.", "Euphausia superba", "Euphausia triacantha", "Euphausia triacantha calyptopis",
+  "Euphausia vallentini", "Euphausia vallentini calyptopis", "Euphausia vallentini furcilia",
+  "Euphausiid calyptope", "Euphausiid calyptope CI", "Euphausiid calyptope CII", "Euphausiid calyptope CIII",
+  "Euphausiid furcilia FI", "Euphausiid furcilia FII", "Euphausiid furcilia FIII", "Euphausiid furcilia FIV",
+  "Euphausiid furcilia FV", "Euphausiid furcilia FVI",
+  "Euphausiidae metanauplii", "Nauplii euphausiid", "Nematoscelis megalops", "Nematoscelis megalops f",
+  "Nyctiphanes australis", "Nyctiphanes australis calyptopis", "Nyctiphanes australis furcilia",
+  "Nyctiphanes spp.", "Pseudeuphausia latifrons", "Thysanoessa gregaria", "Thysanoessa gregaria adult",
+  "Thysanoessa gregaria furcilia", "Thysanoessa gregaria furcilia FI", "Thysanoessa gregaria furcilia FII",
+  "Thysanoessa gregaria furcilia FIII", "Thysanoessa gregaria furcilia FIV", "Thysanoessa gregaria furcilia FV",
+  "Thysanoessa gregaria furcilia FVI", "Thysanoessa macrura", "Thysanoessa macrura CII", "Thysanoessa macrura CIII",
+  "Thysanoessa macrura FI", "Thysanoessa macrura FIII", "Thysanoessa macrura furcilia",
+  "Thysanoessa spp.", "Thysanoessa vicina/macrura", "Thysanoessa vicina/macrura calyptopis", "Thysanoessa vicina/macrura furcilia",  "Hyperia spinigera", "Hyperia spp.", "Hyperiid amphipod", "Hyperiid j",
+  "Hyperiidae", "Paraphronima crassipes", "Phronima spp.",
+  "Synopia spp.", "Themisto gaudichaudii", "Vibilia antarctica", "Vibilia spp.", "Anomura megalopa larvae",
+  "Asteroidea larvae",
+  "Bivalve larvae",
+  "Bothidae larvae",
+  "Brachiopoda larvae",
+  "Bryozoan (Cyphonaute larvae)",
+  "Caridea megalopa larvae",
+  "Cavoliniidae larvae",
+  "Cnidarian larvae",
+  "Colonial ascidian larvae",
+  "Echinoderm larvae",
+  "Euphausid larvae",
+  "Euphausiid furcilia larvae",
+  "Fish egg",
+  "Mollusc larvae",
+  "Monacanthidae (leatherjacket) larvae", "Appendicularia", "Codonella galea", "Codonella spp.",
+  "Codonellopsis morchella", "Codonellopsis orthoceras", "Codonellopsis ostenfeldi",
+  "Codonellopsis spp.", "Doliolum oozoid spp.", "Doliolum spp.",
+  "Ephyra larva", "Fritillaria pellucida", "Hydromedusae",
+  "Medusa", "Parundella spp.", "Pyrosome", "Salpa thompsoni agg",
+  "Salpa thompsoni sol", "Salpidae", "Salpidae agg", "Salpidae sol",
+  "Sapphirina angusta f ?", "Sapphirina angusta m", "Sapphirina cf. nigromaculata f",
+  "Sapphirina cf. nigromaculata m", "Sapphirina metallina f", "Sapphirina metallina m",
+  "Sapphirina nigromaculata f", "Sapphirina nigromaculata m", "Sapphirina opalina",
+  "Sapphirina opalina f", "Sapphirina opalina m", "Sapphirina ovatolanceolata / gemma f",
+  "Sapphirina ovatolanceolata / gemma m", "Sapphirina scarlata f", "Sapphirina scarlata m",
+  "Sapphirina spp.", "Sapphirina spp. f", "Sapphirina spp. j", "Sapphirina spp. m",
+  "Sapphirina stellata", "Sapphirina stellata f", "Sapphirina stellata j", "Sapphirina stellata m",
+  "Siphonophore", "Siphonophore / nectophore", "Siphonophore abylidae", "Siphonophore diphyidae",
+  "Solmundella bitentaculata", "Thaliacean", "Undella spp.", "Eukrohnia hamata",
+  "Pseudosagitta gazellae", "Serratosagitta serratodentata", "Serratosagitta tasmanica",
+  "Climacocylis scalaria", "Climacocylis spp.", "Copilia hendorffi f", "Copilia hendorffi m",
+  "Copilia lata f", "Copilia mirabilis f", "Copilia mirabilis m", "Copilia quadrata f",
+  "Copilia quadrata m", "Copilia spp.", "Copilia spp. f", "Copilia spp. j", "Copilia spp. m",
+  "Eudoxoides spiralis", "Eudoxoides spp.", "Limacina", "Limacina retroversa",
+  "Oikopleura spp.", "Oikopleuridae", "Phalacrophorus spp.", "Phrosina semilunata",
+  "Physonectae", "Stylocheiron carinatum", "Stylocheiron longicorne", "Stylocheiron spp.",
+  "Thalia democratica", "Thalia democratica agg", "Thalia democratica sol", "Thalia spp.",
+  "Spongodiscidae (Circular)", "Spongodiscidae (Quadrate)", "Spongodiscidae (Trigonal)",  "Anomuran zoea", "Brachyuran megalopa", "Brachyuran zoea", "Bryozoan (Cyphonaute larvae)",
+  "Callianassidae zoea", "Caridea megalopa larvae", "Caridea zoea", "Decapod larvae",
+  "Dendrobranchiata larvae", "Echinoderm larvae", "Lucifer penicillifer m", "Lucifer spp.",
+  "Lucifer spp. f", "Lucifer spp. m", "Lucifer spp. mysis", "Lucifer spp. protozoea",
+  "Lucifer typus f", "Lucifer typus m", "Ostracod", "Ostracod gravid", "Peltidiinae",
+  "Cladoceran", "Cladoceran f", "Cladoceran f gravid", "Cladoceran j", "Euconchoecia aculeata",
+  "Euconchoecia aculeata gravid", "Euconchoecia spp.", "Evadne nordmanni", "Evadne nordmanni f",
+  "Evadne nordmanni f gravid", "Evadne nordmanni m", "Evadne spinifera", "Evadne spinifera f",
+  "Evadne spinifera f gravid", "Evadne spinifera m", "Evadne spp f gravid", "Evadne spp.",
+  "Facetotecta cyprid", "Facetotecta nauplii", "Penilia avirostris", "Penilia avirostris f",
+  "Penilia avirostris f gravid", "Penilia avirostris j", "Podon intermedius", "Podon intermedius f",
+  "Podon intermedius f gravid", "Podon intermedius m", "Podon spp.", "Podon spp. f",
+  "Pseudevadne tergestina", "Pseudevadne tergestina f", "Pseudevadne tergestina f gravid",
+  "Pseudevadne tergestina m", "Sulcanus conflictus f", "Sulcanus conflictus j",
+  "Xystonellopsis heros", "Xystonellopsis spp." )
+
+species_columns_existing <- species_to_remove[species_to_remove %in% names(df)]
+
+intersect(species_to_remove, names(df))  # See what will actually be removed
+
+df <- df[ , !(names(df) %in% species_columns_existing)]
+
+# Write the cleaned dataframe to Excel
+write_xlsx(df, path = "subfinal_product4.xlsx")
+
+```
+#total abundance comparison between regions
+
+```{r}
+# Load packages
+library(readxl)
+library(dplyr)
+library(ggplot2)
+
+# Step 1: Load your grouped file
+df <- read_excel("../data/final_grouped_added_to_existing.xlsx")
+
+# Step 2: Calculate total mesozooplankton abundance
+# (Sum of the 6 group columns: Copepods + Euphausiids + Amphipods + etc.)
+df <- df %>%
+  mutate(Total_Mesozooplankton = Copepods + Euphausiids + Amphipods_Mysids +
+                                   Fish_Larvae_Eggs + Gelatinous_Zooplankton + Other_Crustaceans)
+
+# Step 3: Create the boxplot
+ggplot(df, aes(x = Region, y = Total_Mesozooplankton, fill = Region)) +
+  geom_boxplot(outlier.shape = 16, outlier.size = 2) +
+  labs(
+    title = "Total Mesozooplankton Abundance Comparison",
+    x = "Region",
+    y = "Total Mesozooplankton Abundance (log10 scale)"
+  ) +
+  scale_y_log10() +    # << ADD THIS
+  scale_fill_manual(values = c("Great Australian Bight" = "skyblue", "Bass Strait" = "lightgreen")) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    legend.position = "none"
+  )
+
+
+```
+
+#graph for mesozooplankton abundance
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(readxl)
+
+# Load the data
+df <- read_excel("../data/final_grouped_added_to_existing.xlsx")
+
+# Step 1: Pivot longer to get one row per species per station
+df_long <- df %>%
+  pivot_longer(cols = c(`Copepods`, `Euphausiids`, `Amphipods_Mysids`,
+                        `Fish_Larvae_Eggs`, `Gelatinous_Zooplankton`, `Other_Crustaceans`),
+               names_to = "Group", values_to = "Abundance")
+
+# Step 2: Add biomass per group using estimated weights (adjustable)
+weights <- c(
+  "Copepods" = 0.02,
+  "Euphausiids" = 3,
+  "Amphipods_Mysids" = 5,
+  "Fish_Larvae_Eggs" = 200,
+  "Gelatinous_Zooplankton" = 500,
+  "Other_Crustaceans" = 20
+)
+
+df_long <- df_long %>%
+  mutate(Biomass = Abundance * weights[Group])
+
+# Step 3: Summarise abundance and biomass by region and group
+region_summary <- df_long %>%
+  group_by(Region, Group) %>%
+  summarise(Total_Abundance = sum(Abundance, na.rm = TRUE),
+            Total_Biomass = sum(Biomass, na.rm = TRUE)) %>%
+  ungroup()
+
+# Step 4a: Plot ABUNDANCE
+ggplot(region_summary, aes(x = Group, y = Total_Abundance, fill = Region)) +
+  geom_col(position = "dodge") +
+  labs(title = "Mesozooplankton Abundance by Group and Region",
+       x = "Functional Group", y = "Total Abundance (ind/m³)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+
+# Step 4b: Plot BIOMASS
+ggplot(region_summary, aes(x = Group, y = Total_Biomass, fill = Region)) +
+  geom_col(position = "dodge") +
+  labs(title = "Mesozooplankton Biomass by Group and Region",
+       x = "Functional Group", y = "Estimated Biomass (mg/m³)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+
+
+```
+#t-test analysis for biomass and abundance
+```{r}
+library(dplyr)
+library(tidyr)
+library(readxl)
+library(purrr)
+
+# Load your dataset
+df <- read_excel("../data/final_grouped_added_to_existing.xlsx")
+
+# Reshape to long format
+df_long <- df %>%
+  pivot_longer(cols = c(`Copepods`, `Euphausiids`, `Amphipods_Mysids`,
+                        `Fish_Larvae_Eggs`, `Gelatinous_Zooplankton`, `Other_Crustaceans`),
+               names_to = "Group", values_to = "Abundance")
+# Add biomass using estimated group-specific weights (adjust if needed)
+weights <- c(
+  "Copepods" = 0.02,
+  "Euphausiids" = 3,
+  "Amphipods_Mysids" = 5,
+  "Fish_Larvae_Eggs" = 200,
+  "Gelatinous_Zooplankton" = 500,
+  "Other_Crustaceans" = 20
+)
+
+
+df_long <- df_long %>%
+  mutate(Biomass = Abundance * weights[Group])
+
+# Define t-test function for a given metric
+run_ttest <- function(data, metric) {
+  ttest <- t.test(reformulate("Region", metric), data = data)
+  tibble(
+    Mean_GAB = mean(data[[metric]][data$Region == "Great Australian Bight"], na.rm = TRUE),
+    Mean_Bass = mean(data[[metric]][data$Region == "Bass Strait"], na.rm = TRUE),
+    p_value = ttest$p.value,
+    Significant = ifelse(ttest$p.value < 0.05, "*", "")
+  )
+}
+
+# Split and run for abundance
+abundance_table <- df_long %>%
+  group_split(Group) %>%
+  map_dfr(~ {
+    out <- run_ttest(.x, "Abundance")
+    out$Group <- unique(.x$Group)
+    out$Metric <- "Abundance"
+    out
+  }) %>%
+  select(Group, Metric, Mean_GAB, Mean_Bass, p_value, Significant)
+
+# Split and run for biomass
+biomass_table <- df_long %>%
+  group_split(Group) %>%
+  map_dfr(~ {
+    out <- run_ttest(.x, "Biomass")
+    out$Group <- unique(.x$Group)
+    out$Metric <- "Biomass"
+    out
+  }) %>%
+  select(Group, Metric, Mean_GAB, Mean_Bass, p_value, Significant)
+
+# Print both tables
+print("Abundance Comparison Table:")
+print(abundance_table)
+
+print("Biomass Comparison Table:")
+print(biomass_table)
+
+
+```
+
+
+
+
+#chlorophyll and PCI graph
+Make 2 graphs for GAB and Bass Strait.
+```{r}
+library(dplyr)
+library(ggplot2)
+library(viridis)
+
+# Make sure PCI is numeric
+df_long$PCI <- as.numeric(as.character(df_long$PCI))
+
+# Group and smooth (optional)
+smoothed_df <- df_long %>%
+  group_by(PCI, Group) %>%
+  summarise(
+    mean_abundance = mean(Abundance, na.rm = TRUE),
+    se_abundance = sd(Abundance, na.rm = TRUE)/sqrt(n()),
+    .groups = "drop"
+  )
+
+# Plot
+ggplot(df_long, aes(x = PCI, y = Abundance, color = Group)) +
+  geom_point(alpha = 0.3, size = 1) +  
+  geom_smooth(method = "loess", se = TRUE, linewidth = 1.2) +  
+  scale_color_viridis_d(option = "D", end = 0.8) +
+  scale_y_log10() +  # <<<<<< THIS IS THE NEW LINE
+  labs(
+    x = "Productivity Classification Index (PCI)",
+    y = "Abundance (log10 scale, ind/m³)",
+    title = "Smoothed Abundance Trends Across PCI Categories",
+    color = "Functional Group"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    axis.title = element_text(face = "bold"),
+    legend.title = element_text(face = "bold"),
+    legend.position = "right"
+  )
+
+
+```
+
+#statistical analysis for chlorophyl and PCI
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(broom)
+library(purrr)
+
+# This is what you already ran to create tukey_combined:
+df_long$PCI <- as.factor(df_long$PCI)
+
+get_tukey_df <- function(group_name, model) {
+  tukey <- TukeyHSD(model)$PCI
+  tukey_df <- as.data.frame(tukey)
+  tukey_df$Comparison <- rownames(tukey_df)
+  tukey_df$Group <- group_name
+  tukey_df <- tukey_df %>%
+    rename(diff = diff, lwr = lwr, upr = upr, p_value = `p adj`) %>%
+    mutate(Significant = ifelse(p_value < 0.05, "*", ""))
+  return(tukey_df[, c("Group", "Comparison", "diff", "lwr", "upr", "p_value", "Significant")])
+}
+
+# Build the full table 
+tukey_combined <- map_df(unique(df_long$FunctionalGroup), function(grp) {
+  df_sub <- df_long %>% filter(FunctionalGroup == grp)
+  model <- aov(SatChlaSurf_mgm3 ~ PCI, data = df_sub)
+  anova_p <- summary(model)[[1]]$`Pr(>F)`[1]
+  if (!is.na(anova_p) && anova_p < 0.05) {
+    get_tukey_df(grp, model)
+  } else {
+    NULL
+  }
+})
+
+# Summary table (simplified version)
+summary_tukey <- tukey_combined %>%
+  filter(p_value < 0.05) %>%
+  group_by(Group) %>%
+  summarise(
+    anova_p = "< 0.001",
+    Significant_Pairs = paste(Comparison, collapse = ", ")
+  )
+
+# Add Fish Larvae group with no sig results
+no_sig <- tibble(Group = "Fish Larvae & Eggs", anova_p = "0.43", Significant_Pairs = "–")
+summary_tukey_final <- bind_rows(summary_tukey, no_sig)
+
+# View and/or export
+View(summary_tukey_final)
+# write.csv(summary_tukey_final, "summary_stat_table.csv", row.names = FALSE)
+
+```
+
+#environmental drivers pie chart
+
+```{r}
+# Load necessary package
+library(ggplot2)
+
+# Create a small data frame
+focus_data <- data.frame(
+  Focus = c("Zooplankton Dynamics", 
+            "Environmental Drivers (Upwelling/Nutrients)", 
+            "Primary Productivity / Chlorophyll", 
+            "Large-Scale Biogeochemical/Climate Context"),
+  Papers = c(2, 6, 4, 3)
+)
+
+# Make the pie chart
+ggplot(focus_data, aes(x = "", y = Papers, fill = Focus)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  labs(
+    title = "Scientific Focus of Reviewed Papers",
+    fill = "Focus Area"
+  ) +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 10)
+  )
+
+```
+
+#pie chart for regions
+
+```{r}
+# Load libraries
+library(ggplot2)
+
+# Create the data
+pie_data <- data.frame(
+  Region = c("GAB", "Bass Strait", "Global", "Australia-wide", "Other relevant"),
+  Papers = c(4, 3, 4, 3, 5)
+)
+
+# Create a basic pie chart
+ggplot(pie_data, aes(x = "", y = Papers, fill = Region)) +
+  geom_col(width = 1, color = "white") +
+  coord_polar(theta = "y") +
+  labs(title = "Distribution of Literature by Regional Focus") +
+  theme_void() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    legend.title = element_blank()
+  ) +
+  geom_text(aes(label = paste0(Papers)), 
+            position = position_stack(vjust = 0.5),
+            color = "white",
+            size = 5)
+
+```
+
+#leftover species
+
+```{r}
+# Copepods
+copepods <- c(
+  "Aetideidae", "Bradyidius spp. f", "Caligus spp.", "Clytemnestra farrani f", "Clytemnestra longipes f", 
+  "Clytemnestra scutellata f", "Clytemnestra scutellata m", "Clytemnestra spp.", "Clytemnestra spp. f", 
+  "Clytemnestra spp. J", "Clytemnestra spp. M", "Clytemnestridae f", "Copepod damaged / unidentified", 
+  "Copepod eggs", "Goniopsyllus spp. F", "Goniopsyllus spp. M", "Harcledo spp.", "Harpacticoid", 
+  "Harpacticoid f", "Harpacticoid j", "Hemicyclops spp. J", "Lubbockia aculeata f", "Lubbockia aculeata j", 
+  "Lubbockia spp.", "Lubbockia spp. F", "Lubbockia spp. J", "Lubbockia spp. M", "Lubbockia squillimana f", 
+  "Lubbockia squillimana m", "Macrosetella gracilis", "Macrosetella gracilis f", "Macrosetella gracilis j", 
+  "Macrosetella gracilis m", "Macrosetella spp.", "Microsetella norvegica", "Microsetella norvegica f", 
+  "Microsetella norvegica m", "Microsetella rosea", "Microsetella rosea f", "Microsetella rosea m", 
+  "Microsetella spp.", "Microsetella spp. F", "Microsetella spp. J", "Microsetella spp. M", "Miraciidae", 
+  "Monocorycaeus robustus f", "Nauplii calanoid", "Nauplii copepod", "Nauplii harpacticoid", 
+  "Nauplii poecilostomatoida / cyclopoid", "Nauplii zooplankton", "Pandaridae", "Paracalanidae f", 
+  "Paracalanidae j", "Paracalanidae m", "Paroithona spp. F", "Poecilostomatoida / Cyclopoid", 
+  "Pseudoamallothrix ovata f", "Sapphirina angusta f", "Scolecitrichopsis ctenopus m", 
+  "Subeucalanus crassus f", "Subeucalanus crassus m", "Subeucalanus dentatus f", "Subeucalanus dentatus j", 
+  "Subeucalanus dentatus m", "Subeucalanus longiceps", "Subeucalanus longiceps f", "Subeucalanus longiceps m", 
+  "Subeucalanus monachus f", "Subeucalanus mucronatus f", "Subeucalanus pileatus f", "Subeucalanus pileatus m", 
+  "Subeucalanus spp.", "Subeucalanus spp. f", "Subeucalanus spp. i", "Subeucalanus spp. j", "Subeucalanus spp. m", 
+  "Subeucalanus subcrassus f", "Subeucalanus subcrassus i", "Subeucalanus subcrassus m", "Subeucalanus subtenuis f", 
+  "Tisbidae spp. F"
+)
+
+# Amphipods & Mysids
+amphipods_mysids <- c(
+  "Cyllopus lucasii", "Amphipod", "Amphipod j", "Gammarid amphipod", 
+  "Hyperiella macronyx", "Hyperiella spp.", "Mimonectes spp.", "Mysid",
+  "Oxycephalidae", "Parascelidae", "Scina spp.", "Scinidae"
+)
+
+# Gelatinous Zooplankton
+gelatinous_zooplankton <- c(
+  "Acantharia", "Actinotroch of phoronid worm", "Aglaura hemistoma", "Aidanosagitta regularis", "Alciopidae", 
+  "Amplectella tricollaria", "Anthoathecata", "Atlanta spp.", "Calycophoran", "Cavoliniidae", "Cavoliniidae body", 
+  "Cavoliniidae shell", "Chaetognatha", "Chelophyes spp.", "Clione spp.", "Creseis spp.", "Ctenophore", 
+  "Cyttarocylis ampulla", "Cyttarocylis ampulla f. cassis", "Cyttarocylis spp.", "Dadayiella ganymedes", 
+  "Dictyocysta spp.", "Eirene spp.", "Epiplocylis spp.", "Eutintinnus spp.", "Favella spp.", "Flaccisagitta enflata", 
+  "Flaccisagitta spp.", "Foram A", "Foram C", "Foraminifera", "Fritillariidae", "Helicostomella", "Hemityphis spp", 
+  "Hydroid", "Hydromylidae", "Kuhnia spp. Cyst", "Lensia spp.", "Liriope tetraphylla", "Noctiluca scintillans", 
+  "Pelagobia longicirrata", "Physosomata", "Polychaete", "Pteropod", "Pterotracheid", "Pterotracheoidea", 
+  "Pterotracheoidea - atlantid", "Radiolarian A", "Radiolarian B", "Radiolarian D", "Radiolarian G", 
+  "Radiolarian J", "Radiolarian L", "Radiozoa", "Rhabdonella amor", "Rhabdonella apophysate", "Rhabdonella spiralis", 
+  "Rhabdonella spp.", "Rhabdosoma spp", "Rotalia spp.", "Salpingella acuminata", "Salpingella spp.", 
+  "Spongiobranchaea australis", "Tintinnina", "Tintinnopsis radix", "Tintinnopsis spp.", "Tomopteris carpenteri", 
+  "Tomopteris spp.", "Trachymedusae", "Travisiopsis spp.", "Urochordate", "Xystonella lohmanni", 
+  "Xystonella spp.", "Xystonella treforti"
+)
+
+# Other Crustaceans
+other_crustaceans <- c(
+  "Alpheid zoea", "Ambunguipes spp.", "Megalope", "Metacirolana spp.", "Nauplii crustracean", 
+  "Barnacle cyprid", "Barnacle nauplii", "Belzebub spp.", "Isopod", "Isopod j", "Jasus edwardsii", 
+  "Leucosiid zoea", "Lysmata spp.", "Pleopis polyphemoides", "Porcelain crab zoea", 
+  "Protozoea decapod larvae", "Sergestid protozoea", "Sergestid zoea", "Squillidae", "Stomatopod"
+)
+
+# Fish Larvae & Eggs
+fish_larvae_eggs <- c(
+  "Bivalve", "Cephalopoda j", "Echinopluteus", "Echinospira larva", "Egg", "Egg mass", "Gastropod", 
+  "Gastropod operculum", "Gastropod veliger", "Fish j", "Fish larvae", "Fish scales", "Leptocephalus larvae", 
+  "Mollusc", "Mollusc veliger", "Myctophid", "Ophiopluteus", "Ophiuroidea", "Opisthobranchia", 
+  "Pelagosphera larvae", "Pentacrinoid larvae", "Phyllosoma larvae", "Pluteus larva", "Polychaete larvae", 
+  "Prosobranch", "Sipunculid worm larvae", "Syngnathid", "Trochophore larvae", "Unid invert larvae"
+)
+
+# Euphausiids (Krill)
+euphausiids <- c(
+  "Euphausiid adult"
+)
+
+# Load required packages
+library(readxl)
+library(dplyr)
+library(writexl)
+
+# Step 1: Read your file
+df <- read_excel("subfinal_product4.xlsx")
+
+# Step 2: Fix typo in names (dash replacement)
+gelatinous_zooplankton <- gsub("–", "-", gelatinous_zooplankton)
+
+# Step 3: Update existing group columns by adding species sums
+
+df <- df %>%
+  mutate(
+    Copepods = Copepods + rowSums(select(., any_of(copepods)), na.rm = TRUE),
+    Amphipods_Mysids = Amphipods_Mysids + rowSums(select(., any_of(amphipods_mysids)), na.rm = TRUE),
+    Gelatinous_Zooplankton = Gelatinous_Zooplankton + rowSums(select(., any_of(gelatinous_zooplankton)), na.rm = TRUE),
+    Other_Crustaceans = Other_Crustaceans + rowSums(select(., any_of(other_crustaceans)), na.rm = TRUE),
+    Fish_Larvae_Eggs = Fish_Larvae_Eggs + rowSums(select(., any_of(fish_larvae_eggs)), na.rm = TRUE),
+    Euphausiids = Euphausiids + rowSums(select(., any_of(euphausiids)), na.rm = TRUE)
+  )
+
+# Step 4: Save output to new Excel file
+write_xlsx(df, "final_grouped_added_to_existing.xlsx")
 
 ```
 
