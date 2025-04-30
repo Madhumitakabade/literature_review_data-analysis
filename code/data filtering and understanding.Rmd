@@ -1019,7 +1019,7 @@ library(readxl)   # to read Excel files
 library(writexl)
 
 
-df <- read_excel("subfinal_product_3.xlsx", sheet = "Sheet1")
+#df <- read_excel("subfinal_product_3.xlsx", sheet = "Sheet1")
 
 
 species_to_remove <- c("Acartia amboinensis f", "Acartia amboinensis m", "Acartia australis f", "Acartia australis m", 
@@ -1721,14 +1721,19 @@ species_to_remove <- c("Acartia amboinensis f", "Acartia amboinensis m", "Acarti
   "Pseudevadne tergestina m", "Sulcanus conflictus f", "Sulcanus conflictus j",
   "Xystonellopsis heros", "Xystonellopsis spp." )
 
-species_columns_existing <- species_to_remove[species_to_remove %in% names(df)]
+#species_columns_existing <- species_to_remove[species_to_remove %in% names(df)]
 
-intersect(species_to_remove, names(df))  # See what will actually be removed
+#intersect(species_to_remove, names(df))  # See what will actually be removed
 
-df <- df[ , !(names(df) %in% species_columns_existing)]
+#df <- df[ , !(names(df) %in% species_columns_existing)]
 
 # Write the cleaned dataframe to Excel
-write_xlsx(df, path = "subfinal_product4.xlsx")
+#write_xlsx(df, path = "subfinal_product4.xlsx")
+# Now, count how many unique species are there
+num_species <- length(unique(species_list))
+
+# Print the result
+print(num_species)
 
 ```
 #total abundance comparison between regions
@@ -1743,35 +1748,96 @@ library(ggplot2)
 df <- read_excel("../data/final_grouped_added_to_existing.xlsx")
 
 # Step 2: Calculate total mesozooplankton abundance
-# (Sum of the 6 group columns: Copepods + Euphausiids + Amphipods + etc.)
 df <- df %>%
   mutate(Total_Mesozooplankton = Copepods + Euphausiids + Amphipods_Mysids +
                                    Fish_Larvae_Eggs + Gelatinous_Zooplankton + Other_Crustaceans)
 
-# Step 3: Create the boxplot
+# Step 3: Create the upgraded boxplot
 ggplot(df, aes(x = Region, y = Total_Mesozooplankton, fill = Region)) +
-  geom_boxplot(outlier.shape = 16, outlier.size = 2) +
+  geom_boxplot(
+    outlier.shape = 16, 
+    outlier.size = 1.5,        # smaller outliers
+    outlier.color = "grey40",  # lighter outliers
+    width = 0.6,               # thinner boxes
+    coef = 1.5                 # standard whisker range
+  ) +
+  stat_summary(geom = "point", fun = "mean", shape = 20, size = 2.5, color = "black") +  # small black dot for mean
   labs(
     title = "Total Mesozooplankton Abundance Comparison",
     x = "Region",
-    y = "Total Mesozooplankton Abundance (log10 scale)"
+    y = expression(Log[10]*" Total Mesozooplankton Abundance")
   ) +
-  scale_y_log10() +    # << ADD THIS
-  scale_fill_manual(values = c("Great Australian Bight" = "skyblue", "Bass Strait" = "lightgreen")) +
-  theme_minimal() +
+  scale_y_log10() +
+  scale_fill_manual(values = c(
+    "Bass Strait" = "#74C476",             # muted green
+    "Great Australian Bight" = "#6BAED6"   # muted blue
+  )) +
+  theme_minimal(base_family = "Arial") +  # clean professional font
   theme(
-    plot.title = element_text(hjust = 0.5, size = 16),
-    axis.title = element_text(size = 14),
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.title.x = element_text(size = 14, face = "plain"),
+    axis.title.y = element_text(size = 14, face = "plain"),
     axis.text = element_text(size = 12),
-    legend.position = "none"
+    panel.grid.major.x = element_blank(),  # remove vertical gridlines
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.y = element_line(color = "grey85", linewidth = 0.3),  # faint horizontal lines
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.2),
+    legend.position = "none"  # remove legend
   )
+# Save the last plot
+ggsave(
+  filename = "mesozooplankton_abundance_boxplot.tiff",  # or .png, .pdf depending on journal requirements
+  width = 6,      # width in inches
+  height = 5,     # height in inches
+  dpi = 600,      # publication-quality resolution (very important!)
+  units = "in",   # specify inches
+  device = "tiff" # save as .tiff (preferred for scientific journals); or use "png" or "pdf"
+)
+
+
+```
+#ststistical analysis for total mesozooplankton abundance comparison between regions
+```{r}
+library(dplyr)
+library(flextable)
+library(officer)
+
+# First prepare the Median-IQR part
+summary_stats_table <- summary_stats %>%
+  mutate(Statistic = "Median (IQR)",
+         Value = paste0(round(Median, 2), " (", round(IQR, 2), ")")) %>%
+  select(Region, Statistic, Value)
+
+# Prepare the Wilcoxon result part
+wilcox_table <- tibble(
+  Region = "Comparison (GAB vs Bass Strait)",
+  Statistic = "Wilcoxon W, p-value",
+  Value = paste0(W_statistic, ", p = ", signif(p_value, 3))
+)
+
+# Bind them together
+final_summary_table <- bind_rows(summary_stats_table, wilcox_table)
+
+# Create a flextable
+ft_final <- flextable(final_summary_table)
+
+# Optional: Autofit for better layout
+ft_final <- autofit(ft_final)
+
+# Export to Word
+save_as_docx(
+  ft_final,
+  path = "mesozooplankton_median_iqr_wilcoxon_summary.docx"
+)
 
 
 ```
 
+
 #graph for mesozooplankton abundance
 
 ```{r}
+# Load libraries
 library(dplyr)
 library(tidyr)
 library(ggplot2)
@@ -1780,47 +1846,60 @@ library(readxl)
 # Load the data
 df <- read_excel("../data/final_grouped_added_to_existing.xlsx")
 
-# Step 1: Pivot longer to get one row per species per station
+# Step 1: Pivot longer to get one row per group per station
 df_long <- df %>%
-  pivot_longer(cols = c(`Copepods`, `Euphausiids`, `Amphipods_Mysids`,
-                        `Fish_Larvae_Eggs`, `Gelatinous_Zooplankton`, `Other_Crustaceans`),
+  pivot_longer(cols = c(Copepods, Euphausiids, Amphipods_Mysids,
+                        Fish_Larvae_Eggs, Gelatinous_Zooplankton, Other_Crustaceans),
                names_to = "Group", values_to = "Abundance")
 
-# Step 2: Add biomass per group using estimated weights (adjustable)
-weights <- c(
-  "Copepods" = 0.02,
-  "Euphausiids" = 3,
-  "Amphipods_Mysids" = 5,
-  "Fish_Larvae_Eggs" = 200,
-  "Gelatinous_Zooplankton" = 500,
-  "Other_Crustaceans" = 20
-)
-
-df_long <- df_long %>%
-  mutate(Biomass = Abundance * weights[Group])
-
-# Step 3: Summarise abundance and biomass by region and group
+# Step 2: Summarise data with mean, sd, se for each Region-Group combination
 region_summary <- df_long %>%
   group_by(Region, Group) %>%
-  summarise(Total_Abundance = sum(Abundance, na.rm = TRUE),
-            Total_Biomass = sum(Biomass, na.rm = TRUE)) %>%
-  ungroup()
+  summarise(
+    Mean_Abundance = mean(Abundance, na.rm = TRUE),
+    SD_Abundance = sd(Abundance, na.rm = TRUE),
+    SE_Abundance = SD_Abundance / sqrt(n()),
+    .groups = "drop"
+  )
 
-# Step 4a: Plot ABUNDANCE
-ggplot(region_summary, aes(x = Group, y = Total_Abundance, fill = Region)) +
-  geom_col(position = "dodge") +
-  labs(title = "Mesozooplankton Abundance by Group and Region",
-       x = "Functional Group", y = "Total Abundance (ind/m³)") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+# Step 3: Plot with error bars and clean design
+ggplot(region_summary, aes(x = Group, y = Mean_Abundance, fill = Region)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.7, color = "black") +  # colored bars with black borders
+  geom_errorbar(aes(ymin = Mean_Abundance - SE_Abundance, ymax = Mean_Abundance + SE_Abundance),
+                position = position_dodge(width = 0.8),
+                width = 0.2, size = 0.6) +  # error bars
+  labs(
+    title = "Mesozooplankton Abundance by Group and Region",
+    x = "Functional Group",
+    y = expression("Mean Total Abundance (ind/m"^3*")")
+  ) +
+  scale_fill_manual(values = c(
+    "Bass Strait" = "#74C476",           # muted green
+    "Great Australian Bight" = "#6BAED6" # muted blue
+  )) +
+  theme_minimal(base_family = "Arial") +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),
+    axis.title = element_text(size = 14),
+    axis.text.x = element_text(size = 12, angle = 30, hjust = 1),
+    axis.text.y = element_text(size = 12),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.y = element_line(color = "grey85", linewidth = 0.3),
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.2),
+    legend.title = element_blank(),
+    legend.position = "top"
+  )
 
-# Step 4b: Plot BIOMASS
-ggplot(region_summary, aes(x = Group, y = Total_Biomass, fill = Region)) +
-  geom_col(position = "dodge") +
-  labs(title = "Mesozooplankton Biomass by Group and Region",
-       x = "Functional Group", y = "Estimated Biomass (mg/m³)") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+# Save the last plot you made
+ggsave(
+  filename = "mesozooplankton_abundance_final.tiff",  # or .png, or .pdf if you prefer
+  width = 7,           # width of the plot (inches)
+  height = 5,          # height of the plot (inches)
+  dpi = 600,           # 600 dpi = publication quality
+  units = "in",        # specify units in inches
+  device = "tiff"      # file type (TIFF preferred for journals)
+)
 
 
 ```
@@ -1893,6 +1972,22 @@ print(abundance_table)
 print("Biomass Comparison Table:")
 print(biomass_table)
 
+# Load libraries for exporting
+library(flextable)
+library(officer)
+
+# Create a flextable from abundance_table
+ft_abundance <- flextable(abundance_table)
+
+# Optional: Auto fit the column widths for neatness
+ft_abundance <- autofit(ft_abundance)
+
+# Export to Word
+save_as_docx(
+  ft_abundance, 
+  path = "abundance_comparison_table.docx"
+)
+
 
 ```
 
@@ -1902,42 +1997,79 @@ print(biomass_table)
 #chlorophyll and PCI graph
 Make 2 graphs for GAB and Bass Strait.
 ```{r}
-library(dplyr)
+# Load libraries
 library(ggplot2)
-library(viridis)
+library(dplyr)
+library(scales)  # for alpha() function
 
-# Make sure PCI is numeric
-df_long$PCI <- as.numeric(as.character(df_long$PCI))
+# Filter only Bass Strait data
+bass_df <- df_long %>%
+  filter(Region == "Bass Strait")
 
-# Group and smooth (optional)
-smoothed_df <- df_long %>%
-  group_by(PCI, Group) %>%
-  summarise(
-    mean_abundance = mean(Abundance, na.rm = TRUE),
-    se_abundance = sd(Abundance, na.rm = TRUE)/sqrt(n()),
-    .groups = "drop"
-  )
-
-# Plot
-ggplot(df_long, aes(x = PCI, y = Abundance, color = Group)) +
-  geom_point(alpha = 0.3, size = 1) +  
-  geom_smooth(method = "loess", se = TRUE, linewidth = 1.2) +  
-  scale_color_viridis_d(option = "D", end = 0.8) +
-  scale_y_log10() +  # <<<<<< THIS IS THE NEW LINE
-  labs(
-    x = "Productivity Classification Index (PCI)",
-    y = "Abundance (log10 scale, ind/m³)",
-    title = "Smoothed Abundance Trends Across PCI Categories",
-    color = "Functional Group"
+# Final clean plot
+p <- ggplot(bass_df, aes(x = PCI, y = Abundance, color = Group)) +
+  geom_smooth(
+    method = "loess",
+    se = TRUE,
+    aes(fill = after_scale(alpha(color, 0.2))),  # << THIS is the clean fix
+    linewidth = 1.2
   ) +
-  theme_minimal(base_size = 14) +
+  scale_y_log10() +
+  scale_color_manual(
+    values = c(
+      "Amphipods_Mysids" = "#66C2A5", 
+      "Copepods" = "#FC8D62",          
+      "Euphausiids" = "#8DA0CB",        
+      "Fish_Larvae_Eggs" = "#E78AC3",   
+      "Gelatinous_Zooplankton" = "#A6D854",
+      "Other_Crustaceans" = "#FFD92F"
+    ),
+    labels = c(
+      "Amphipods Mysids",
+      "Copepods",
+      "Euphausiids",
+      "Fish Larvae Eggs",
+      "Gelatinous Zooplankton",
+      "Other Crustaceans"
+    )
+  ) +
+  labs(
+    title = "Zooplankton Functional Group Responses to Productivity (PCI) in Bass Strait",
+    x = "Productivity Classification Index (PCI)",
+    y = expression("Abundance (log"[10]*" scale, ind/m"^3*")"),
+    color = "Functional Group"  # Legend title
+  ) +
+  theme_minimal(base_family = "Arial", base_size = 14) +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
-    axis.title = element_text(face = "bold"),
-    legend.title = element_text(face = "bold"),
+    axis.title = element_text(size = 14),
+    axis.text = element_text(size = 12),
+    legend.title = element_text(size = 13),
+    legend.text = element_text(size = 11),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.y = element_line(color = "grey85", linewidth = 0.3),
+    panel.grid.minor.y = element_line(color = "grey90", linewidth = 0.2),
     legend.position = "right"
   )
 
+# Show the plot
+print(p)
+
+
+
+
+# Print plot
+# Export plot at high resolution
+ggsave(
+  filename = "zooplankton_functional_group_pci_bass_strait.tiff",
+  plot = p,
+  width = 7,           # width in inches
+  height = 5,          # height in inches
+  dpi = 600,           # publication quality resolution
+  units = "in",
+  device = "tiff"
+)
 
 ```
 
@@ -1964,8 +2096,8 @@ get_tukey_df <- function(group_name, model) {
 }
 
 # Build the full table 
-tukey_combined <- map_df(unique(df_long$FunctionalGroup), function(grp) {
-  df_sub <- df_long %>% filter(FunctionalGroup == grp)
+tukey_combined <- map_df(unique(df_long$Group), function(grp) {
+  df_sub <- df_long %>% filter(Group == grp)
   model <- aov(SatChlaSurf_mgm3 ~ PCI, data = df_sub)
   anova_p <- summary(model)[[1]]$`Pr(>F)`[1]
   if (!is.na(anova_p) && anova_p < 0.05) {
@@ -1988,70 +2120,152 @@ summary_tukey <- tukey_combined %>%
 no_sig <- tibble(Group = "Fish Larvae & Eggs", anova_p = "0.43", Significant_Pairs = "–")
 summary_tukey_final <- bind_rows(summary_tukey, no_sig)
 
-# View and/or export
-View(summary_tukey_final)
-# write.csv(summary_tukey_final, "summary_stat_table.csv", row.names = FALSE)
+print(summary_tukey_final)
+
+# Load extra packages for exporting
+#install.packages("flextable")
+#install.packages("officer")
+library(flextable)
+library(officer)
+
+# Create a flextable from your final summary
+ft <- flextable(summary_tukey_final)
+
+# Export it as a clean Word document
+save_as_docx(
+  ft, 
+  path = "summary_tukey_final.docx"
+)
 
 ```
 
 #environmental drivers pie chart
 
 ```{r}
-# Load necessary package
-library(ggplot2)
 
-# Create a small data frame
+    # Load necessary packages
+library(ggplot2)
+library(dplyr)
+library(scales)  # for percentage formatting
+
+# Create the updated data frame
 focus_data <- data.frame(
-  Focus = c("Zooplankton Dynamics", 
+  Focus = c("Zooplankton Abundance", 
+            "Mesozooplankton Abundance",
             "Environmental Drivers (Upwelling/Nutrients)", 
             "Primary Productivity / Chlorophyll", 
             "Large-Scale Biogeochemical/Climate Context"),
-  Papers = c(2, 6, 4, 3)
+  Papers = c(8, 3, 10, 7, 7)
 )
 
-# Make the pie chart
-ggplot(focus_data, aes(x = "", y = Papers, fill = Focus)) +
-  geom_col(width = 1, color = "white") +
+# Calculate percentage for labels
+focus_data <- focus_data %>%
+  mutate(Percent = Papers / sum(Papers) * 100)
+
+# Define soft professional colors
+soft_colors <- c(
+  "Environmental Drivers (Upwelling/Nutrients)" = "#FC8D62",
+  "Large-Scale Biogeochemical/Climate Context" = "#A6D854",
+  "Mesozooplankton Abundance" = "#66C2A5",
+  "Primary Productivity / Chlorophyll" = "#8DA0CB",
+  "Zooplankton Abundance" = "#E78AC3"
+)
+
+# Create the upgraded pie chart
+p <- ggplot(focus_data, aes(x = "", y = Papers, fill = Focus)) +
+  geom_col(width = 1, color = "white", linewidth = 0.7) +
   coord_polar(theta = "y") +
+  geom_text(aes(label = paste0(round(Percent, 1), "%")),  # << Show percent with 1 decimal place
+            position = position_stack(vjust = 0.5),
+            color = "white",
+            size = 4.5) +
+  scale_fill_manual(values = soft_colors) +
   labs(
     title = "Scientific Focus of Reviewed Papers",
     fill = "Focus Area"
   ) +
   theme_void() +
   theme(
-    plot.title = element_text(hjust = 0.5, face = "bold"),
-    legend.title = element_text(face = "bold"),
-    legend.text = element_text(size = 10)
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+    legend.title = element_text(face = "bold", size = 12),
+    legend.text = element_text(size = 10),
+    legend.position = "right"
   )
+
+# Show the plot
+print(p)
+
+ggsave(
+  filename = "scientific_focus_reviewed_papers_piechart_percent.tiff",
+  plot = p,
+  width = 7,
+  height = 5,
+  dpi = 600
+)
+
+
 
 ```
 
 #pie chart for regions
 
 ```{r}
-# Load libraries
+# Load necessary packages
 library(ggplot2)
+library(dplyr)
+library(scales)  # for percentage formatting
 
-# Create the data
-pie_data <- data.frame(
+# Create the updated data frame
+region_data <- data.frame(
   Region = c("GAB", "Bass Strait", "Global", "Australia-wide", "Other relevant"),
-  Papers = c(4, 3, 4, 3, 5)
+  Papers = c(5, 4, 3, 13, 9)
 )
 
-# Create a basic pie chart
-ggplot(pie_data, aes(x = "", y = Papers, fill = Region)) +
-  geom_col(width = 1, color = "white") +
+# Calculate percentage for labels
+region_data <- region_data %>%
+  mutate(Percent = Papers / sum(Papers) * 100)
+
+# Define soft, professional colors
+region_colors <- c(
+  "Australia-wide" = "#FC8D62",   # Soft coral
+  "Bass Strait" = "#A6D854",      # Olive green
+  "GAB" = "#66C2A5",              # Soft turquoise
+  "Global" = "#8DA0CB",           # Light sky blue
+  "Other relevant" = "#E78AC3"    # Muted lavender
+)
+
+# Create the upgraded pie chart
+p <- ggplot(region_data, aes(x = "", y = Papers, fill = Region)) +
+  geom_col(width = 1, color = "white", linewidth = 0.7) +
   coord_polar(theta = "y") +
-  labs(title = "Distribution of Literature by Regional Focus") +
+  geom_text(aes(label = paste0(round(Percent, 1), "%")),  # << Percent inside slices
+            position = position_stack(vjust = 0.5),
+            color = "white",
+            size = 4.5) +
+  scale_fill_manual(values = region_colors) +
+  labs(
+    title = "Distribution of Literature by Regional Focus",
+    fill = "Region"
+  ) +
   theme_void() +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
-    legend.title = element_blank()
-  ) +
-  geom_text(aes(label = paste0(Papers)), 
-            position = position_stack(vjust = 0.5),
-            color = "white",
-            size = 5)
+    legend.title = element_blank(),
+    legend.text = element_text(size = 10),
+    legend.position = "right"
+  )
+
+# Show the plot
+print(p)
+
+ggsave(
+  filename = "distribution_literature_regional_focus_piechart.tiff",
+  plot = p,
+  width = 7,
+  height = 5,
+  dpi = 600
+)
+
 
 ```
 
